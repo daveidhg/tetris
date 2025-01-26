@@ -106,44 +106,49 @@ class Tetris:
         self.draw_grid()
         self.draw_icons()
         pg.display.flip()
+    
+    def handle_events(self) -> tuple[tuple[int, int], int, int]: #dmove, rmove, move_value
+        move_value = 0
+        dmove = None
+        rmove = None
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.running = False
+                pg.quit()
+                quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_LEFT:
+                    dmove = (-1, 0)
+                elif event.key == pg.K_RIGHT:
+                    dmove = (1, 0)
+                elif event.key == pg.K_DOWN:
+                    dmove = (0, 1)
+                    self.time = 0
+                elif event.key == pg.K_UP:
+                    rmove = 1
+                elif event.key == pg.K_z:
+                    rmove = -1
+                elif event.key == pg.K_SPACE:
+                    while not self.check_collision():
+                        self.current_tetromino.move(0, 1)
+                        move_value += 2
+                    self.time = 0
+                    self.current_tetromino.move(0, -1)
+                    dmove = (0, 1)
+                    move_value -= 2
+                elif event.key == pg.K_c:
+                    if not self.last_hold:
+                        self.hold()
+                        self.last_hold = True
+                        self.time = 0
+        return (dmove, rmove, move_value)
 
     def game_loop(self):
         while self.running:
             self.time += self.clock.get_time()
             print(self.time)
-            move_value = 0
-            dmove = None
-            rmove = None
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    self.running = False
-                    pg.quit()
-                    quit()
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_LEFT:
-                        dmove = [-1, 0]
-                    elif event.key == pg.K_RIGHT:
-                        dmove = [1, 0]
-                    elif event.key == pg.K_DOWN:
-                        dmove = [0, 1]
-                        self.time = 0
-                    elif event.key == pg.K_UP:
-                        rmove = 1
-                    elif event.key == pg.K_z:
-                        rmove = -1
-                    elif event.key == pg.K_SPACE:
-                        while not self.check_collision():
-                            self.current_tetromino.move(0, 1)
-                            move_value += 2
-                        self.time = 0
-                        self.current_tetromino.move(0, -1)
-                        dmove = [0, 1]
-                        move_value -= 2
-                    elif event.key == pg.K_c:
-                        if not self.last_hold:
-                            self.hold()
-                            self.last_hold = True
-                            self.time = 0
+            
+            dmove, rmove, move_value = self.handle_events()
 
             if self.time * self.falling_speed >= 1000:
                 dmove = [0, 1]
