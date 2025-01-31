@@ -139,9 +139,9 @@ class Tetromino:
         self.x = 3
         self.y = 0
         self.__rotation = 0
-        self.get_positions()
+        self.calculate_positions()
 
-    def get_positions(self) -> None:
+    def calculate_positions(self) -> None:
         self.last_coords = self.coords
         coords = []
         for y, row in enumerate(self.shapes[self.__rotation]):
@@ -153,18 +153,18 @@ class Tetromino:
     
     def rotate(self, direction) -> list[tuple[int, int]]: 
         self.__rotation = (self.__rotation + direction) % 4
-        self.get_positions()
+        self.calculate_positions()
     
     def move(self, x, y) -> None:
         self.x += x
         self.y += y
-        self.get_positions()
+        self.calculate_positions()
 
     def reset(self) -> None:
         self.x = 3
         self.y = 0
         self.__rotation = 0
-        self.get_positions()
+        self.calculate_positions()
     
 
     
