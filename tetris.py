@@ -133,7 +133,7 @@ class Tetris:
                         self.current_tetromino.move(0, 1)
                         move_value += 2
                     self.time = 0
-                    self.current_tetromino.move(0, -1)
+                    self.current_tetromino.move(0, -2)
                     dmove = (0, 1)
                     move_value -= 2
                 elif event.key == pg.K_c:
@@ -146,7 +146,6 @@ class Tetris:
     def game_loop(self):
         while self.running:
             self.time += self.clock.get_time()
-            print(self.time)
             
             dmove, rmove, move_value = self.handle_events()
 
