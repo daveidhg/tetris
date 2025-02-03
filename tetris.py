@@ -150,7 +150,7 @@ class Tetris:
             dmove, rmove, move_value = self.handle_events()
 
             if self.time * self.falling_speed >= 1000:
-                dmove = [0, 1]
+                dmove = (0, 1)
                 self.time = 0
             self.fill_grid()
             if dmove:
@@ -163,7 +163,7 @@ class Tetris:
                 if self.check_collision():
                     self.current_tetromino.rotate(-rmove)
 
-            if self.check_collision() and dmove == [0, 1]:
+            if self.check_collision() and dmove == (0, 1):
                 self.current_tetromino.move(0, -1)
                 for x, y in self.current_tetromino.coords:
                     self.filled_space[(x, y)] = self.current_tetromino.icon
