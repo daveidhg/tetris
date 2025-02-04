@@ -152,7 +152,7 @@ class Tetromino:
 
     
     def rotate(self, direction) -> list[tuple[int, int]]: 
-        self.__rotation = (self.__rotation + direction) % 4
+        self.__rotation = (self.__rotation + direction) % len(self.shapes)
         self.calculate_positions()
     
     def move(self, x, y) -> None:

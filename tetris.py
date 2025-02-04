@@ -133,7 +133,7 @@ class Tetris:
                         self.current_tetromino.move(0, 1)
                         move_value += 2
                     self.time = 0
-                    self.current_tetromino.move(0, -2)
+                    self.current_tetromino.move(0, -1)
                     dmove = (0, 1)
                     move_value -= 2
                 elif event.key == pg.K_c:
@@ -154,24 +154,25 @@ class Tetris:
                 self.time = 0
             self.fill_grid()
             if dmove:
-                print(dmove)
                 self.current_tetromino.move(*dmove)
-                if self.check_collision() and dmove[0]:
-                    self.current_tetromino.move(-dmove[0], 0)
             if rmove:
                 self.current_tetromino.rotate(rmove)
                 if self.check_collision():
                     self.current_tetromino.rotate(-rmove)
 
-            if self.check_collision() and dmove == (0, 1):
-                self.current_tetromino.move(0, -1)
-                for x, y in self.current_tetromino.coords:
-                    self.filled_space[(x, y)] = self.current_tetromino.icon
-                self.current_tetromino = self.next_tetromino
-                self.next_tetromino = Tetromino()
-                while self.check_collision():
+            if self.check_collision():
+                if dmove == (0, 1):
                     self.current_tetromino.move(0, -1)
-                self.last_hold = False
+                    for x, y in self.current_tetromino.coords:
+                        self.filled_space[(x, y)] = self.current_tetromino.icon
+                    self.current_tetromino = self.next_tetromino
+                    self.next_tetromino = Tetromino()
+                    print("now")
+                    while self.check_collision(): 
+                        self.current_tetromino.move(0, -1)
+                    self.last_hold = False
+                else:
+                    self.current_tetromino.move(*list(map(lambda x: -x, dmove)))
 
             if y_cleared := self.check_lines_cleared():
                 lines = len(y_cleared)
@@ -201,8 +202,9 @@ class Tetris:
                 self.running = False
                 pg.quit()
             
-            self.clock.tick(FPS)
             self.draw_game()
+            self.clock.tick(FPS)
+
 
 
 if __name__ == "__main__":
