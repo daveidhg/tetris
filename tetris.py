@@ -56,7 +56,7 @@ class Tetris:
         for x, y in self.current_tetromino.coords:
             if y < 0:
                 continue
-            if x < 0 or x >= BLOCKS_PER_ROW or y >= BLOCKS_PER_COL or self.grid[y][x]:
+            if y < 0 or x < 0 or x >= BLOCKS_PER_ROW or y >= BLOCKS_PER_COL or self.grid[y][x]:
                 return True
         return False
 
@@ -161,13 +161,13 @@ class Tetris:
                     self.current_tetromino.rotate(-rmove)
 
             if self.check_collision():
-                if dmove == (0, 1):
+                if dmove == (0, 1) or not dmove:
                     self.current_tetromino.move(0, -1)
                     for x, y in self.current_tetromino.coords:
                         self.filled_space[(x, y)] = self.current_tetromino.icon
                     self.current_tetromino = self.next_tetromino
                     self.next_tetromino = Tetromino()
-                    print("now")
+                    self.fill_grid()
                     while self.check_collision(): 
                         self.current_tetromino.move(0, -1)
                     self.last_hold = False
@@ -201,6 +201,7 @@ class Tetris:
             if self.lose():
                 self.running = False
                 pg.quit()
+                break
             
             self.draw_game()
             self.clock.tick(FPS)
