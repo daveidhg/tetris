@@ -1,4 +1,5 @@
 from random import choice
+import pygame as pg
 import os
 
 file_dir = os.path.dirname(__file__)
@@ -10,7 +11,8 @@ blue = os.path.join(file_dir, "icons/blue.webp")
 cyan = os.path.join(file_dir, "icons/cyan.webp")
 orange = os.path.join(file_dir, "icons/orange.webp")
 
-colors = {"I": cyan, "O": yellow, "T": purple, "S": green, "Z": red, "J": blue, "L": orange}
+BLOCK_RECT = (30, 30)
+colors = {"I": pg.transform.scale(pg.image.load(cyan), BLOCK_RECT), "O": pg.transform.scale(pg.image.load(yellow), BLOCK_RECT), "T": pg.transform.scale(pg.image.load(purple), BLOCK_RECT), "S": pg.transform.scale(pg.image.load(green), BLOCK_RECT), "Z": pg.transform.scale(pg.image.load(red), BLOCK_RECT), "J": pg.transform.scale(pg.image.load(blue), BLOCK_RECT), "L": pg.transform.scale(pg.image.load(orange), BLOCK_RECT)}
 
 shapes = {
     "I": [

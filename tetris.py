@@ -97,11 +97,11 @@ class Tetris:
     
     def draw_icons(self):
         for (x, y), icon in self.filled_space.items():
-            self.screen.blit(pg.transform.scale(pg.image.load(icon), (BLOCK_SIZE, BLOCK_SIZE)), (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+            self.screen.blit(icon, (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
         for x, y in self.current_tetromino.coords:
             if y < 0:
                 continue
-            self.screen.blit(pg.transform.scale(pg.image.load(self.current_tetromino.icon), (BLOCK_SIZE, BLOCK_SIZE)), (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+            self.screen.blit(self.current_tetromino.icon, (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
 
     def draw_game(self):
         self.screen.fill((0, 0, 0))
