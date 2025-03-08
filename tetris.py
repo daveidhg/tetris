@@ -102,11 +102,31 @@ class Tetris:
             if y < 0:
                 continue
             self.screen.blit(self.current_tetromino.icon, (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+    
+    def draw_text(self):
+        font = pg.font.Font(None, 50)
+        text = font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self.screen.blit(text, (WIDTH - 200, 100))
+        text = font.render(f"Level: {self.level}", True, (255, 255, 255))
+        self.screen.blit(text, (WIDTH - 200, 200))
+        text = font.render(f"Lines: {self.lines}", True, (255, 255, 255))
+        self.screen.blit(text, (WIDTH - 200, 300))
+        text = font.render(f"Next", True, (255, 255, 255))
+        self.screen.blit(text, (WIDTH - 200, 400))
+        text = font.render(f"Hold", True, (255, 255, 255))
+        self.screen.blit(text, (WIDTH - 200, 600))
+        if self.next_tetromino:
+            for x, y in self.next_tetromino.coords:
+                self.screen.blit(self.next_tetromino.icon, (WIDTH - 200 + x * BLOCK_SIZE, 500 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+        if self.hold_tetromino:
+            for x, y in self.hold_tetromino.coords:
+                self.screen.blit(self.hold_tetromino.icon, (WIDTH - 200 + x * BLOCK_SIZE, 700 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
 
     def draw_game(self):
         self.screen.fill((0, 0, 0))
         self.draw_grid()
         self.draw_icons()
+        self.draw_text()
         pg.display.flip()
     
     def handle_events(self) -> tuple[tuple[int, int], int, int]: #dmove, rmove, move_value
