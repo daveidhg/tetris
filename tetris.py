@@ -40,6 +40,7 @@ class Tetris:
         if self.hold_tetromino:
             self.current_tetromino, self.hold_tetromino = self.hold_tetromino, self.current_tetromino
             self.current_tetromino.reset()
+            self.hold_tetromino.reset()
         else:
             self.hold_tetromino = self.current_tetromino
             self.current_tetromino = self.next_tetromino
