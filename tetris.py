@@ -53,8 +53,9 @@ class Tetris:
             x, y = coord
             self.grid[y][x] = icon
     
-    def check_collision(self):
-        for x, y in self.current_tetromino.coords:
+    def check_collision(self, ghost=False):
+        coords = self.current_tetromino.coords if not ghost else self.current_tetromino.ghost_coords
+        for x, y in coords:
             if y < 0:
                 continue
             if y < 0 or x < 0 or x >= BLOCKS_PER_ROW or y >= BLOCKS_PER_COL or self.grid[y][x]:
@@ -99,6 +100,13 @@ class Tetris:
     def draw_icons(self):
         for (x, y), icon in self.filled_space.items():
             self.screen.blit(icon, (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+        for x, y in self.calculate_ghost_coords():
+            if y < 0:
+                continue
+            surface = pg.Surface((BLOCK_SIZE, BLOCK_SIZE))
+            surface.set_alpha(20)
+            surface.fill((255, 255, 255))
+            self.screen.blit(surface, (GAME_START_X + x * BLOCK_SIZE, GAME_START_Y + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
         for x, y in self.current_tetromino.coords:
             if y < 0:
                 continue
@@ -115,13 +123,13 @@ class Tetris:
         text = font.render(f"Next", True, (255, 255, 255))
         self.screen.blit(text, (WIDTH - 200, 400))
         text = font.render(f"Hold", True, (255, 255, 255))
-        self.screen.blit(text, (WIDTH - 200, 600))
+        self.screen.blit(text, (GAME_START_X - 200, 400))
         if self.next_tetromino:
             for x, y in self.next_tetromino.coords:
-                self.screen.blit(self.next_tetromino.icon, (WIDTH - 200 + x * BLOCK_SIZE, 500 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+                self.screen.blit(self.next_tetromino.icon, (WIDTH - 300 + x * BLOCK_SIZE, 500 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
         if self.hold_tetromino:
             for x, y in self.hold_tetromino.coords:
-                self.screen.blit(self.hold_tetromino.icon, (WIDTH - 200 + x * BLOCK_SIZE, 700 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
+                self.screen.blit(self.hold_tetromino.icon, (GAME_START_X - 300 + x * BLOCK_SIZE, 500 + y * BLOCK_SIZE), (0, 0, BLOCK_SIZE, BLOCK_SIZE))
 
     def draw_game(self):
         self.screen.fill((0, 0, 0))
@@ -166,6 +174,13 @@ class Tetris:
                         self.time = 0
         return (dmove, rmove, move_value)
 
+    def calculate_ghost_coords(self):
+        self.current_tetromino.ghost_coords = self.current_tetromino.coords[:]
+        while not self.check_collision(ghost=True):
+            self.current_tetromino.move(0, 1, ghost=True)
+        self.current_tetromino.move(0, -1, ghost=True)
+        return self.current_tetromino.ghost_coords
+    
     def game_loop(self):
         while self.running:
             self.time += self.clock.get_time()

@@ -137,6 +137,7 @@ class Tetromino:
         self.shapes = shapes[self.name]
         self.icon = colors[self.name]
         self.coords = None
+        self.ghost_coords= None
         self.last_coords = None
         self.x = 3
         self.y = 0
@@ -157,10 +158,14 @@ class Tetromino:
         self.__rotation = (self.__rotation + direction) % len(self.shapes)
         self.calculate_positions()
     
-    def move(self, x, y) -> None:
-        self.x += x
-        self.y += y
-        self.calculate_positions()
+    def move(self, x, y, ghost=False) -> None:
+        if ghost:
+            for i in range(len(self.ghost_coords)):
+                self.ghost_coords[i] = (self.ghost_coords[i][0] + x, self.ghost_coords[i][1] + y)
+        else:
+            self.x += x
+            self.y += y
+            self.calculate_positions()
 
     def reset(self) -> None:
         self.x = 3
