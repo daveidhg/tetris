@@ -18,7 +18,7 @@ class Tetris:
         self.clock = pg.time.Clock()
         self.time = 0
         self.falling_speed = 1
-        self.running = True
+        self.running = False
 
         self.level = 1
         self.score = 0
@@ -182,6 +182,7 @@ class Tetris:
         return self.current_tetromino.ghost_coords
     
     def game_loop(self):
+        self.running = True
         while self.running:
             self.time += self.clock.get_time()
             
@@ -238,15 +239,39 @@ class Tetris:
             
             if self.lose():
                 self.running = False
-                pg.quit()
                 break
+                return
             
             self.draw_game()
             self.clock.tick(FPS)
 
+    def main_menu(self):
+        self.screen.fill((0, 0, 0))
+        font = pg.font.Font(None, 75)
+        title = font.render("Tetris", True, (255, 255, 255))
+        self.screen.blit(title, (WIDTH // 2 - title.get_width() // 2, HEIGHT // 2 - title.get_height() // 2))
+        font = pg.font.Font(None, 50)
+        start_text = font.render("Press any key to start", True, (255, 255, 255))
+        self.screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 2 + title.get_height() // 2 + 20))
+        pg.display.flip()
+        self.menu = True
+        while self.menu:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    self.menu = False
+                    quit()
+                if event.type == pg.KEYDOWN:
+                    self.menu = False
+                    tetris.game_loop()
+    
+    def main(self):
+        while True:
+            self.main_menu()
+            
 
 
 if __name__ == "__main__":
     tetris = Tetris()
 
-    tetris.game_loop()
+    tetris.main()
